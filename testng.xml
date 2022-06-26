@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite" parallel="methods">
+
+	<parameter name="uid" value="Admin" />
+	<parameter name="pwd" value="admin123" />
+
+	<test name="ChrtomeTest">
+		<parameter name="URL" value="https://opensource-demo.orangehrmlive.com/" />
+		<parameter name="BROWSERNAME" value="chrome" />
+
+		<groups>
+			<run>
+				<include name="Smoke" />
+			</run>
+		</groups>
+
+		<classes>
+			<class name="com.automation.tests.LoginTests" />
+		</classes>
+
+	</test>
+
+	<test name="FirefoxTest">
+		<parameter name="URL" value="https://opensource-demo.orangehrmlive.com/" />
+		<parameter name="BROWSERNAME" value="firefox" />
+		<groups>
+			<run>
+				<include name="Smoke" />
+			</run>
+		</groups>
+		<classes>
+			<class name="com.automation.tests.LoginTests" />
+			<class name="com.automation.tests.DashBoardTests" />
+			<class name="com.automation.tests.LogOutTests" />
+		</classes>
+	</test>
+
+</suite>
