@@ -2,19 +2,34 @@ package com.automation.tests;
 
 import java.time.Duration;
 
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseTest {
-
-	private WebDriver driver;
+	
+	public static ExtentReports reports;
+	public static ExtentTest test;
+	private ExtentSparkReporter reporter;
+	
+	public WebDriver driver;
 	private String browserName;
 	private String url;
 
@@ -41,6 +56,25 @@ public class BaseTest {
 	}
 
 
+	@BeforeSuite
+	public void reportSetUp(){
+		reports = new ExtentReports();
+		reporter = new ExtentSparkReporter("extentReport/report.html");
+		reports.attachReporter(reporter);
+	}
+	
+	
+	@AfterSuite
+	public void reportsFlush(){
+		reports.flush();
+	}
+	
+	@BeforeMethod(alwaysRun = true)
+	public void setUpTestReport(ITestResult result){
+		driver = openApplication();	
+		test = reports.createTest("test1");
+	}
+	
 	@Parameters({"URL","BROWSERNAME"})
 	@BeforeTest(alwaysRun = true)
 	public void setUpEnv(String url, String browserName){
@@ -49,7 +83,16 @@ public class BaseTest {
 	}
 
 	@AfterMethod(alwaysRun = true)
-	public void closeApplication(){
+	public void closeApplication(ITestResult result){
+		
+		if(result.isSuccess()){
+			test.pass("Test Passed");
+		}else{
+			TakesScreenshot tss = (TakesScreenshot) driver;
+			//File screenshotPath = tss.getScreenshotAs(OutputType.FILE);
+			String screenShotInBase64 = tss.getScreenshotAs(OutputType.BASE64);
+			test.fail("Test failed due to : "+ result.getThrowable().getMessage() , MediaEntityBuilder.createScreenCaptureFromBase64String(screenShotInBase64).build());
+		}
 		driver.close();
 	}
 
