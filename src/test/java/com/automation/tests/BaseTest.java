@@ -25,7 +25,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseTest {
 	
-	public static ExtentReports reports;
+	private static ExtentReports reports;
 	public static ExtentTest test;
 	private ExtentSparkReporter reporter;
 	
@@ -56,15 +56,15 @@ public class BaseTest {
 	}
 
 
-	@BeforeSuite
+	@BeforeSuite(alwaysRun = true)
 	public void reportSetUp(){
 		reports = new ExtentReports();
-		reporter = new ExtentSparkReporter("extentReport/report.html");
+		reporter = new ExtentSparkReporter("extentReports/report.html");
 		reports.attachReporter(reporter);
 	}
 	
 	
-	@AfterSuite
+	@AfterSuite(alwaysRun = true)
 	public void reportsFlush(){
 		reports.flush();
 	}
@@ -72,7 +72,7 @@ public class BaseTest {
 	@BeforeMethod(alwaysRun = true)
 	public void setUpTestReport(ITestResult result){
 		driver = openApplication();	
-		test = reports.createTest("test1");
+		test = reports.createTest(result.getMethod().getMethodName());
 	}
 	
 	@Parameters({"URL","BROWSERNAME"})
