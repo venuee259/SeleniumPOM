@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Suite]">
+  <parameter name="uid" value="Admin"/>
+  <parameter name="pwd" value="admin123"/>
+  <parameter name="URL" value="https://opensource-demo.orangehrmlive.com/"/>
+  <test name="ChromeTest(failed)">
+    <parameter name="BROWSERNAME" value="chrome"/>
+    <groups>
+      <run>
+        <include name="Smoke"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="com.automation.tests.LoginTests">
+        <methods>
+          <include name="setUpTestReport"/>
+          <include name="closeApplication"/>
+          <include name="setUpEnv"/>
+          <include name="loginTest3"/>
+        </methods>
+      </class> <!-- com.automation.tests.LoginTests -->
+    </classes>
+  </test> <!-- ChromeTest(failed) -->
+</suite> <!-- Failed suite [Suite] -->
